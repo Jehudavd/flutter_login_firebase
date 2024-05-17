@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login_firebase/pages/login_page.dart';
 import 'package:flutter_login_firebase/pages/register_page.dart';
-import 'login_page.dart';
 
 class LoginOrRegisterPage extends StatefulWidget {
   const LoginOrRegisterPage({super.key});
@@ -10,9 +10,8 @@ class LoginOrRegisterPage extends StatefulWidget {
 }
 
 class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
-  
-  // initially show login page
-  bool showLoginPage = true;
+  // initially show register page
+  bool showLoginPage = false;
 
   // toggle between login and register page
   void togglePages() {

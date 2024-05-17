@@ -16,7 +16,22 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         actions: [IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))],
       ),
-      body: Center(child: Text("Hello! " + user.email!, style: TextStyle(fontSize: 20),)),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Hello! " + user.email!,
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 15),
+            Text(
+              "Your UID: " + user.uid,
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

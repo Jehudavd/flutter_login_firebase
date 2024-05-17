@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_firebase/components/my_button.dart';
 import 'package:flutter_login_firebase/components/my_textfield.dart';
 import 'package:flutter_login_firebase/components/square_tile.dart';
+
 import 'package:flutter_login_firebase/services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  const RegisterPage({super.key, required this.onTap});
+  final Function(bool)? onRegister; // Add this line
+
+  const RegisterPage({super.key, required this.onTap, this.onRegister}); // Update the constructor
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -24,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
     // show loading circle
     showDialog(
       context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
       builder: (context) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -37,21 +41,58 @@ class _RegisterPageState extends State<RegisterPage> {
       if (passwordController.text == confirmPasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: emailController.text, password: passwordController.text);
+
+        // pop the loading circle
+        Navigator.pop(context);
+
+        // sign out the user immediately to prevent redirection to HomePage
+        await FirebaseAuth.instance.signOut();
+
+        // show success message
+        showSuccessMessage('Registration successful, Login now!');
+        // Set registering flag to false after showing success message
+        widget.onRegister?.call(false);
       } else {
         // pop the loading circle before showing error message
         Navigator.pop(context);
-        // show error message password dont match
-        showErrorMessage('Password dont match!');
-        return;
+        // show error message password don't match
+        showErrorMessage('Passwords do not match!');
       }
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
       // show error message
-      showErrorMessage(e.code);
+      showErrorMessage(e.message ?? 'An error occurred');
     }
-    // pop the loading circle
-    Navigator.pop(context);
+  }
+
+  // success message to user
+  void showSuccessMessage(String message) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.green[400],
+            title: Center(
+                child: Text(
+              message,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            )),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                  // Set registering flag to false after showing success message
+                  widget.onRegister?.call(false);
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   // error message to user
@@ -60,12 +101,23 @@ class _RegisterPageState extends State<RegisterPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Colors.red[400],
             title: Center(
                 child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             )),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           );
         });
   }
@@ -86,7 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               // logo
               const Icon(
-                Icons.lock,
+                Icons.account_circle_rounded,
                 size: 100,
               ),
 
@@ -96,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               // text welcome
               Text(
-                'Hello, Sign Up!',
+                "Hey, let's create an account for you!",
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 16,
@@ -183,7 +235,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
 
               // google sign in button
-               Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
@@ -212,7 +264,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Text(
                       'Login now',
                       style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],

@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     // show loading circle
     showDialog(
       context: context,
+      barrierDismissible: false, // prevent dismissing by tapping outside
       builder: (context) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
       // pop the loading circle
       Navigator.pop(context);
       // show error message
-      showErrorMessage(e.code);
+      showErrorMessage(e.message ?? 'An error occurred');
     }
   }
 
@@ -51,12 +52,23 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: Colors.deepPurple,
+            backgroundColor: Colors.red[400],
             title: Center(
                 child: Text(
               message,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white, fontSize: 16),
             )),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           );
         });
   }
@@ -77,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // logo
               const Icon(
-                Icons.lock,
+                Icons.account_circle_rounded,
                 size: 100,
               ),
 
@@ -87,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
 
               // text welcome
               Text(
-                'Welcome Back, Log In!',
+                "Welcome back, people pleaser!",
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 16,
@@ -118,20 +130,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(
                 height: 10,
-              ),
-
-              // forgot password
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
               ),
 
               const SizedBox(
@@ -199,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Dont have account?',
+                    'Dont have an account?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(
@@ -210,7 +208,8 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       'Register now',
                       style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],

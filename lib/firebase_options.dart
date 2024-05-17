@@ -40,5 +40,49 @@ class DefaultFirebaseOptions {
     }
   }
 
-  
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyAa6g3DRGgD5Ivb7mp8HZNY6w4iRdLQsyI',
+    appId: '1:733660619553:web:b5c6dbdb094ff570171460',
+    messagingSenderId: '733660619553',
+    projectId: 'course-net-e4c7b',
+    authDomain: 'course-net-e4c7b.firebaseapp.com',
+    storageBucket: 'course-net-e4c7b.appspot.com',
+    measurementId: 'G-BMEV7HT114',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCcM0R1kiqO56cvc8fzY8O74bGU1NLohyw',
+    appId: '1:733660619553:android:465f49d66376c076171460',
+    messagingSenderId: '733660619553',
+    projectId: 'course-net-e4c7b',
+    storageBucket: 'course-net-e4c7b.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyC7FDU86-5D8GwPoMZaRmNAkaILl14w8vQ',
+    appId: '1:733660619553:ios:d2d3d7022260ce77171460',
+    messagingSenderId: '733660619553',
+    projectId: 'course-net-e4c7b',
+    storageBucket: 'course-net-e4c7b.appspot.com',
+    iosBundleId: 'com.example.flutterLoginFirebase',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyC7FDU86-5D8GwPoMZaRmNAkaILl14w8vQ',
+    appId: '1:733660619553:ios:d2d3d7022260ce77171460',
+    messagingSenderId: '733660619553',
+    projectId: 'course-net-e4c7b',
+    storageBucket: 'course-net-e4c7b.appspot.com',
+    iosBundleId: 'com.example.flutterLoginFirebase',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyAa6g3DRGgD5Ivb7mp8HZNY6w4iRdLQsyI',
+    appId: '1:733660619553:web:425b6c0bf82deab3171460',
+    messagingSenderId: '733660619553',
+    projectId: 'course-net-e4c7b',
+    authDomain: 'course-net-e4c7b.firebaseapp.com',
+    storageBucket: 'course-net-e4c7b.appspot.com',
+    measurementId: 'G-XSWNMFPBRL',
+  );
 }
