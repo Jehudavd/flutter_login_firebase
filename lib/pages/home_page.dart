@@ -13,25 +13,16 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        backgroundColor: Colors.grey[300],
         actions: [IconButton(onPressed: signUserOut, icon: Icon(Icons.logout))],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Hello! " + user.email!,
-              style: TextStyle(fontSize: 20),
-            ),
-            SizedBox(height: 15),
-            Text(
-              "Your UID: " + user.uid,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
-      ),
+          child: Text(
+        "Hello! " + user.email!,
+        style: TextStyle(fontSize: 20),
+      )),
     );
   }
 }

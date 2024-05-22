@@ -6,29 +6,23 @@ class MyTextField extends StatefulWidget {
   final bool obscureText;
 
   const MyTextField({
-    super.key,
+    Key? key,
     required this.controller,
     required this.hintText,
     required this.obscureText,
-  });
+  }) : super(key: key);
 
   @override
   _MyTextFieldState createState() => _MyTextFieldState();
 }
 
 class _MyTextFieldState extends State<MyTextField> {
-  bool _isObscured = true;
+  late bool _obscureText;
 
   @override
   void initState() {
     super.initState();
-    _isObscured = widget.obscureText;
-  }
-
-  void _toggleObscureText() {
-    setState(() {
-      _isObscured = !_isObscured;
-    });
+    _obscureText = widget.obscureText;
   }
 
   @override
@@ -37,7 +31,7 @@ class _MyTextFieldState extends State<MyTextField> {
       padding: const EdgeInsets.symmetric(horizontal: 25),
       child: TextField(
         controller: widget.controller,
-        obscureText: _isObscured,
+        obscureText: _obscureText,
         decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
@@ -52,9 +46,13 @@ class _MyTextFieldState extends State<MyTextField> {
           suffixIcon: widget.obscureText
               ? IconButton(
                   icon: Icon(
-                    _isObscured ? Icons.visibility_off : Icons.visibility,
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
                   ),
-                  onPressed: _toggleObscureText,
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
                 )
               : null,
         ),

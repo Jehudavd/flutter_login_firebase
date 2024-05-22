@@ -6,7 +6,7 @@ import 'package:flutter_login_firebase/components/square_tile.dart';
 import 'package:flutter_login_firebase/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
-  final Function()? onTap;
+  final Function()? onTap; // Callback for navigation to register page
   const LoginPage({super.key, required this.onTap});
 
   @override
@@ -14,17 +14,21 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // text editing controller
+  // controllers for text fields
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
 
-  // sign user in method
+  // sign in method
   void signUserIn() async {
+    // check if fields are empty
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      showErrorMessage('Please fill in all fields');
+      return;
+    }
+
     // show loading circle
     showDialog(
       context: context,
-      barrierDismissible: false, // prevent dismissing by tapping outside
       builder: (context) {
         return const Center(
           child: CircularProgressIndicator(),
@@ -32,18 +36,42 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
 
-    // try sign in
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+      // try to sign in
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
       // pop the loading circle
       Navigator.pop(context);
+      // show success dialog with UID
+      showSuccessDialog(userCredential.user?.uid);
     } on FirebaseAuthException catch (e) {
       // pop the loading circle
       Navigator.pop(context);
       // show error message
-      showErrorMessage(e.message ?? 'An error occurred');
+      showErrorMessage(e.message ?? 'An error occurred. Please try again.');
     }
+  }
+
+  // success message to user
+  void showSuccessDialog(String? uid) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Login Successful!'),
+          content: Text('Your user ID is: $uid'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // error message to user
@@ -52,22 +80,15 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            backgroundColor: Colors.red[400],
-            title: Center(
-                child: Text(
-              message,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            )),
+            title: const Text('Login Failed!'),
+            content: Text(message),
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close the dialog
+                  Navigator.of(context).pop();
                 },
-                child: const Text(
-                  'OK',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
+                child: const Text("OK"),
+              )
             ],
           );
         });
@@ -76,39 +97,32 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false, //solve bottom overloaded
       backgroundColor: Colors.grey[300],
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
 
               // logo
-              const Icon(
-                Icons.account_circle_rounded,
-                size: 100,
+              Image.asset(
+                'lib/images/logo.png',
+                height: 100,
               ),
 
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
 
-              // text welcome
+              // welcome text
               Text(
-                "Welcome back, people pleaser!",
+                'Welcome! to Purbox',
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 16,
                 ),
               ),
 
-              const SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
 
               // email textfield
               MyTextField(
@@ -117,36 +131,26 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: false,
               ),
 
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
 
-              // password textfield
+              // password text field
               MyTextField(
                 controller: passwordController,
                 hintText: 'Password',
                 obscureText: true,
               ),
 
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 30),
 
-              const SizedBox(
-                height: 20,
-              ),
-
-              // sign in
+              // sign in button
               MyButton(
                 text: 'Sign In',
                 onTap: signUserIn,
               ),
 
-              const SizedBox(
-                height: 50,
-              ),
+              const SizedBox(height: 50),
 
-              // or continue with
+              // or continue with google text
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Row(
@@ -165,34 +169,30 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Expanded(
-                      child: Divider(
-                        thickness: 0.5,
-                        color: Colors.grey[400],
-                      ),
+                      child: Divider(thickness: 0.5, color: Colors.grey[400]),
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
 
               // google sign in button
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GestureDetector(
-                      onTap: AuthService().signInWithGoogle,
-                      child: SquareTile(imagePath: 'lib/images/google.png')),
+                    onTap: () {
+                      AuthService().signInWithGoogle(context);
+                    },
+                    child: const SquareTile(imagePath: 'lib/images/google.png'),
+                  ),
                 ],
               ),
 
-              const SizedBox(
-                height: 25,
-              ),
+              const SizedBox(height: 25),
 
-              // dont have account? register now
+              // register now text
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -200,12 +200,10 @@ class _LoginPageState extends State<LoginPage> {
                     'Dont have an account?',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
+                  const SizedBox(width: 4),
                   GestureDetector(
                     onTap: widget.onTap,
-                    child: Text(
+                    child: const Text(
                       'Register now',
                       style: TextStyle(
                           color: Colors.deepPurple,

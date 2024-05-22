@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login_firebase/pages/auth_pages.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_login_firebase/pages/splash_screen.dart';
 import 'firebase_options.dart';
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,12 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthPage()
+      home: SplashScreen(),
     );
   }
 }
-
-
